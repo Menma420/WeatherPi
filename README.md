@@ -1,2 +1,119 @@
-# WeatherPi
-IOT project for real-time weather update using MQTT - RaspberryPI
+# 🌦️ WeatherPi
+**An IoT-powered Weather Monitoring System using Raspberry Pi, MQTT, and Flask.**
+
+WeatherPi is a distributed weather station platform where:
+- A **Raspberry Pi node** reads sensor data (temperature, humidity, etc.), pre-processes it, and publishes via **MQTT**.
+- A **WebHost server** subscribes to those topics, processes data in real time, stores user credentials remotely, and displays live graphs and sensor updates in a Flask-based web dashboard.
+
+---
+
+## 🏗️ Project Structure
+
+```
+
+WeatherPi/
+├── RaspberriPi/
+│   ├── weather.py          # Publishes sensor data to MQTT broker
+│   └──requirements.txt    # paho-mqtt, gpiozero, etc.
+└── WebHost/
+├── app.py              # Flask web dashboard and MQTT subscriber
+└── requirements.txt  
+
+````
+
+---
+
+## ⚙️ Components Overview
+
+| Component | Role | Runs on |
+|------------|-------|----------|
+| **Raspberry Pi Node** | Reads sensor data (e.g., DHT11) and publishes JSON over MQTT | Raspberry Pi |
+| **MQTT Broker** | Message hub for data exchange between Pi and server | WebHost / separate server |
+| **Flask WebHost** | Subscribes to sensor data, provides live dashboard, user login/signup | Host / Laptop |
+| **Remote SQL API** | Simple remote DB endpoint for user auth | Render / Cloud |
+
+---
+
+## 🌐 MQTT Workflow
+
+```text
+[Raspberry Pi Sensor Node]
+    |
+    |  → Publishes JSON →  topic: sensors/<device>/dht11
+    |     Example payload:
+    |     {
+    |       "ts": 1763040407677,
+    |       "value": {"temperature": <encrypted temperature>, "humidity": <encrypted temperature>},
+    |       "status": 200,
+    |       "device": "raspberrypi"
+    |     }
+    |
+[MQTT Broker (Mosquitto)]
+    |
+    ↓
+[Flask WebHost (Subscriber)]
+    - Parses JSON
+    - Streams live via SSE (/stream)
+    - Displays charts in dashboard
+````
+
+---
+
+## 🧠 Tech Stack
+
+| Category | Technology                            |
+| -------- | ------------------------------------- |
+| Hardware | Raspberry Pi + DHT11 Sensor |
+| Protocol | MQTT (via `paho-mqtt`)                |
+| Backend  | Flask (Python 3)                      |
+| Frontend | Chart.js + SSE (Server-Sent Events)   |
+| Database | Remote SQLite API (REST)              |
+| Broker   | Mosquitto                             |
+| Language | Python 3.9+                           |
+
+---
+
+
+
+
+
+
+## 📊 Dashboard Features
+
+✅ Real-time Temperature / Humidity / Pressure charts
+✅ Live raw JSON stream viewer
+✅ User Sign up / Login / Logout
+✅ Auto-creation of user table in SQL API
+✅ Sensor value decyprtion
+✅ Time sanity check for sensor timestamps
+✅ Secure session management
+
+---
+
+## 💡 Future Enhancements
+
+* 🌍 Multi-device dashboard view
+* 📦 SQLite/InfluxDB data persistence
+* 📈 Daily reports & CSV export
+* 🔔 Threshold alerts (Telegram / Email)
+* 🌐 Interactive map for multi-station setup
+* 🔒 Token-based API access
+
+---
+
+## 🧑‍💻 Authors
+
+* **Nishant Narjinary with Uttkarsh Malviya & Sahul Kumar** – Project Developer
+* **WeatherPi Team** – IoT & Web System Integration
+
+---
+
+## 📜 License
+
+This project is released under the **MIT License** — free for personal and educational use.
+
+---
+
+
+> “Measure. Connect. Predict.” — *WeatherPi 2025*
+
