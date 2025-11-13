@@ -16,8 +16,8 @@ WeatherPi/
 │   ├── weather.py          # Publishes sensor data to MQTT broker
 │   └──requirements.txt    # paho-mqtt, gpiozero, etc.
 └── WebHost/
-├── app.py              # Flask web dashboard and MQTT subscriber
-└── requirements.txt  
+    ├── app.py              # Flask web dashboard and MQTT subscriber
+    └── requirements.txt  
 
 ````
 
