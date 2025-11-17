@@ -95,11 +95,201 @@ LOGIN_HTML = """
 <!doctype html><html><head>
 <title>Login</title>
 <style>
-body { font-family: sans-serif; background:#eef2f5; display:flex; justify-content:center; align-items:center; height:100vh; }
-form { background:white; padding:2rem; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); width:320px; }
-input { width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:4px; }
-button { width:100%; padding:10px; background:#0078d7; color:white; border:none; border-radius:4px; }
-.error { color:red; margin-bottom:10px; text-align:center; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+:root{
+  --accent-1: #0078d7;
+  --accent-2: #00c2ff;
+  --glass-bg: rgba(255,255,255,0.14);
+  --glass-border: rgba(255,255,255,0.18);
+  --muted: #e6eef6;
+  --text: #0f1724;
+}
+
+* { box-sizing: border-box; }
+
+html,body{
+  height:100%;
+  margin:0;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* full-bleed background photo + subtle animated gradient overlay */
+body{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background-color: #eaf3fb;
+  background-image:
+    linear-gradient(180deg, rgba(12,30,60,0.18), rgba(6,18,36,0.22)),
+    url('https://images.unsplash.com/photo-1501973801540-537f08ccae7d?auto=format&fit=crop&w=1650&q=80');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+  padding:40px;
+}
+
+/* dim & blur overlay to keep text readable on small devices */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.12));
+  pointer-events:none;
+  mix-blend-mode: multiply;
+}
+
+/* Form container - glass card */
+form {
+  width: 360px;
+  max-width: calc(100% - 48px);
+  background: linear-gradient(135deg, rgba(255,255,255,0.50), rgba(255,255,255,0.36));
+  border-radius: 14px;
+  padding: 28px 26px;
+  box-shadow: 0 10px 30px rgba(8,20,40,0.35);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  transform: translateY(0);
+  transition: transform .35s cubic-bezier(.2,.9,.3,1);
+}
+
+/* subtle lift on hover/focus for desktop */
+@media (hover:hover) and (pointer: fine){
+  form:hover { transform: translateY(-6px); }
+}
+
+/* heading with weather glyph */
+form h3{
+  margin:0 0 6px 0;
+  font-size:20px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:#042033;
+  letter-spacing:-0.2px;
+}
+
+/* add small weather badge before the heading (emoji used so no HTML changes) */
+form h3::before{
+  content: "🌤️";
+  display:inline-block;
+  font-size:20px;
+  transform: translateY(1px);
+}
+
+/* error message refined */
+.error {
+  color:#b72b2b;
+  background: rgba(183,43,43,0.06);
+  border:1px solid rgba(183,43,43,0.12);
+  padding:8px 10px;
+  border-radius:8px;
+  text-align:center;
+  font-size:13px;
+}
+
+/* inputs */
+input {
+  width:100%;
+  padding:12px 14px;
+  margin:0;
+  font-size:14px;
+  color:#06202b;
+  background: rgba(255,255,255,0.7);
+  border:1px solid rgba(8,20,30,0.07);
+  border-radius:10px;
+  outline:none;
+  transition: box-shadow .18s ease, transform .12s ease, border-color .12s ease;
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.6);
+}
+
+/* input focus look */
+input:focus{
+  border-color: rgba(0,120,215,0.95);
+  box-shadow: 0 6px 18px rgba(0,110,200,0.12);
+  transform: translateY(-1px);
+}
+
+/* placeholder subtle */
+input::placeholder{
+  color: rgba(6, 30, 40, 0.4);
+}
+
+/* button */
+button {
+  width:100%;
+  padding:12px 14px;
+  font-size:15px;
+  font-weight:600;
+  color:white;
+  border-radius:10px;
+  border: none;
+  cursor:pointer;
+  background-image: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  box-shadow: 0 8px 18px rgba(0,120,215,0.18), inset 0 -2px 0 rgba(0,0,0,0.06);
+  transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+}
+
+/* button interactions */
+button:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(0,120,215,0.20); }
+button:active { transform: translateY(0); filter:brightness(.98); }
+
+/* small sign-up line */
+form p{
+  margin:10px 0 0 0;
+  font-size:13px;
+  color: rgba(4,32,51,0.75);
+  text-align:center;
+}
+
+/* link style */
+form a{
+  color: var(--accent-1);
+  text-decoration:none;
+  font-weight:600;
+}
+form a:hover { text-decoration:underline; }
+
+/* responsive tweaks for very small screens */
+@media (max-width:420px){
+  form { padding:20px; border-radius:12px; }
+  form h3 { font-size:18px; }
+  input, button { padding:10px 12px; border-radius:8px; }
+}
+
+/* optional: a tiny animated cloud using a CSS keyframe on the background (subtle motion) */
+@keyframes cloudFloat {
+  0% { transform: translateX(-5px) translateY(0); opacity: .98; }
+  50% { transform: translateX(5px) translateY(-2px); opacity: .995; }
+  100% { transform: translateX(-5px) translateY(0); opacity: .98; }
+}
+
+/* apply a pseudo cloud overlay for a soft moving layer (keeps background photo readable) */
+form::after{
+  content:"";
+  position:absolute;
+  inset:auto;
+  right: -40px;
+  top: -40px;
+  width:140px;
+  height:140px;
+  pointer-events:none;
+  background-image: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.25) 25%, rgba(255,255,255,0.02) 70%);
+  border-radius:50%;
+  filter: blur(18px);
+  opacity:0.7;
+  transform: translateZ(0);
+  animation: cloudFloat 8s ease-in-out infinite;
+}
+
 </style></head><body>
 <form method="post">
   <h3>User Login</h3>
@@ -116,14 +306,276 @@ SIGNUP_HTML = """
 <!doctype html><html><head>
 <title>Sign Up</title>
 <style>
-body { font-family: sans-serif; background:#eef2f5; display:flex; justify-content:center; align-items:center; height:100vh; }
-form { background:white; padding:2rem; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); width:320px; }
-input { width:100%; padding:10px; margin-bottom:10px; border:1px solid #ccc; border-radius:4px; }
-button { width:100%; padding:10px; background:#0078d7; color:white; border:none; border-radius:4px; }
-.error { color:red; margin-bottom:10px; text-align:center; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+:root{
+  --accent-1: #0078d7;
+  --accent-2: #00c2ff;
+  --glass-bg: rgba(255,255,255,0.14);
+  --glass-border: rgba(255,255,255,0.18);
+  --muted: #e6eef6;
+  --text: #0f1724;
+  --success: #0b9a66;
+  --danger: #b72b2b;
+}
+
+* { box-sizing: border-box; }
+
+html,body{
+  height:100%;
+  margin:0;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+body{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background-color: #eaf3fb;
+  background-image:
+    linear-gradient(180deg, rgba(12,30,60,0.18), rgba(6,18,36,0.22)),
+    url('https://images.unsplash.com/photo-1501973801540-537f08ccae7d?auto=format&fit=crop&w=1650&q=80');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+  padding:40px;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.12));
+  pointer-events:none;
+  mix-blend-mode: multiply;
+}
+
+/* glass card */
+form {
+  width: 420px;
+  max-width: calc(100% - 48px);
+  background: linear-gradient(135deg, rgba(255,255,255,0.50), rgba(255,255,255,0.36));
+  border-radius: 14px;
+  padding: 28px 26px;
+  box-shadow: 0 10px 30px rgba(8,20,40,0.35);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  position:relative;
+  transition: transform .35s cubic-bezier(.2,.9,.3,1);
+}
+
+/* subtle lift */
+@media (hover:hover) and (pointer: fine){
+  form:hover { transform: translateY(-6px); }
+}
+
+/* heading */
+form h3{
+  margin:0;
+  font-size:20px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:#042033;
+  letter-spacing:-0.2px;
+}
+form h3::before{
+  content: "🌦️";
+  display:inline-block;
+  font-size:20px;
+  transform: translateY(1px);
+}
+
+/* error message */
+.error {
+  color:var(--danger);
+  background: rgba(183,43,43,0.06);
+  border:1px solid rgba(183,43,43,0.12);
+  padding:8px 10px;
+  border-radius:8px;
+  text-align:center;
+  font-size:13px;
+}
+
+/* inputs */
+input:not([type="checkbox"]),
+select {
+  width:100%;
+  padding:12px 14px;
+  margin:0;
+  font-size:14px;
+  color:#06202b;
+  background: rgba(255,255,255,0.78);
+  border:1px solid rgba(8,20,30,0.07);
+  border-radius:10px;
+  outline:none;
+  transition: box-shadow .18s ease, transform .12s ease, border-color .12s ease;
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.6);
+}
+
+
+/* focus */
+input:focus, select:focus {
+  border-color: rgba(0,120,215,0.95);
+  box-shadow: 0 6px 18px rgba(0,110,200,0.12);
+  transform: translateY(-1px);
+}
+
+/* placeholders */
+input::placeholder{
+  color: rgba(6, 30, 40, 0.4);
+}
+
+/* button */
+button {
+  width:100%;
+  padding:12px 14px;
+  font-size:15px;
+  font-weight:600;
+  color:white;
+  border-radius:10px;
+  border: none;
+  cursor:pointer;
+  background-image: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  box-shadow: 0 8px 18px rgba(0,120,215,0.18), inset 0 -2px 0 rgba(0,0,0,0.06);
+  transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+}
+
+/* button interactions */
+button:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(0,120,215,0.20); }
+button:active { transform: translateY(0); filter:brightness(.98); }
+
+/* checkbox group wrapper */
+form .checkboxes {
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-top:4px;
+}
+
+/* custom checkbox styling (keeps original input but hides default) */
+label {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:14px;
+  color: rgba(4,32,51,0.85);
+  cursor:pointer;
+  user-select:none;
+}
+
+/* hide native checkbox but keep keyboard focusable */
+label input[type="checkbox"]{
+  -webkit-appearance:none;
+  appearance:none;
+  width:18px;
+  height:18px;
+  border-radius:6px;
+  border:1.5px solid rgba(6,30,40,0.12);
+  background: rgba(255,255,255,0.9);
+  display:inline-block;
+  position:relative;
+  margin:0;
+  outline:none;
+  transition: all .12s ease;
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.6);
+}
+
+/* checked state - show a simple tick */
+label input[type="checkbox"]:checked{
+  background: linear-gradient(180deg, rgba(0,120,215,0.95), rgba(0,194,255,0.9));
+  border-color: rgba(0,120,215,0.95);
+}
+label input[type="checkbox"]:checked::after{
+  content: "✔";
+  position:absolute;
+  left:3px;
+  top:-1px;
+  font-size:12px;
+  color:#fff;
+  font-weight:700;
+}
+
+/* disabled checkbox (pressure) - visually subdued */
+label input[type="checkbox"][disabled]{
+  background: linear-gradient(180deg, rgba(250,250,250,0.9), rgba(245,245,245,0.9));
+  border-color: rgba(6,30,40,0.06);
+  cursor:not-allowed;
+  opacity:0.62;
+}
+label input[type="checkbox"][disabled] + span,
+label input[type="checkbox"][disabled] ~ span {
+  opacity:0.62;
+  color: rgba(6,30,40,0.45);
+}
+
+/* align small helper text for disabled */
+label span.hint {
+  font-size:12px;
+  color: rgba(6,30,40,0.5);
+}
+
+/* small sign-up line (if any) */
+form p{
+  margin:6px 0 0 0;
+  font-size:13px;
+  color: rgba(4,32,51,0.75);
+  text-align:center;
+}
+
+/* responsive */
+@media (max-width:520px){
+  form { width: calc(100% - 32px); padding:20px; border-radius:12px; }
+  label { font-size:13px; }
+  input, button { padding:10px 12px; border-radius:8px; }
+}
+
+/* decorative moving cloud (subtle) */
+@keyframes cloudFloat {
+  0% { transform: translateX(-6px) translateY(0); opacity: .98; }
+  50% { transform: translateX(6px) translateY(-2px); opacity: .995; }
+  100% { transform: translateX(-6px) translateY(0); opacity: .98; }
+}
+form::after{
+  content:"";
+  position:absolute;
+  right: -36px;
+  top: -36px;
+  width:120px;
+  height:120px;
+  pointer-events:none;
+  background-image: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.25) 25%, rgba(255,255,255,0.02) 70%);
+  border-radius:50%;
+  filter: blur(16px);
+  opacity:0.7;
+  transform: translateZ(0);
+  animation: cloudFloat 9s ease-in-out infinite;
+}
+
+
+@keyframes cloudFloat {
+  0% { transform: translateX(-5px) translateY(0); opacity: .98; }
+  50% { transform: translateX(5px) translateY(-2px); opacity: .995; }
+  100% { transform: translateX(-5px) translateY(0); opacity: .98; }
+}
+form h2::before{
+  content: "🌤️";
+  display:inline-block;
+  font-size:20px;
+  transform: translateY(1px);
+}
+
+
 </style></head><body>
 <form method="post">
-  <h3>Create Account</h3>
+  <h2>Create Account</h2>
 
   {% if error %}<div class="error">{{error}}</div>{% endif %}
 
@@ -337,18 +789,203 @@ INDEX_HTML = """
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon"></script>
 
 <style>
-body{font-family:sans-serif;background:#eef2f5;margin:10px}
-.card{background:white;padding:15px;border-radius:8px;margin-bottom:12px;
-      box-shadow:0 2px 6px rgba(0,0,0,0.1)}
-.grid{display:grid;grid-template-columns:1fr;gap:12px}
-@media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
-.current{font-size:1.3rem;font-weight:bold;margin-top:6px}
-#raw{font-family:monospace;font-size:0.9rem;max-height:40vh;overflow:auto}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+:root{
+  --bg-1: #eaf3fb;
+  --accent-1: #0078d7;
+  --accent-2: #00c2ff;
+  --glass-border: rgba(255,255,255,0.18);
+  --card-shadow: rgba(8,20,40,0.14);
+  --muted: #5f7887;
+  --card-radius: 14px;
+  --glass-elev: rgba(255,255,255,0.45);
+  --surface: rgba(255,255,255,0.72);
+  --success: #0b9a66;
+  --danger: #b72b2b;
+}
+
+/* base */
+* { box-sizing: border-box; }
+html,body{height:100%; margin:0; font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; color:#042033; background-color:var(--bg-1); }
+
+/* full-bleed background photo with subtle overlay (matches login/signup theme) */
+body{
+  background-image:
+    linear-gradient(180deg, rgba(12,30,60,0.12), rgba(6,18,36,0.12)),
+    url('https://images.unsplash.com/photo-1501973801540-537f08ccae7d?auto=format&fit=crop&w=1650&q=80');
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+  padding:20px;
+}
+
+/* page container spacing for small margins */
+body > * { max-width:1200px; margin:0 auto; }
+
+/* card */
+.card{
+  background: linear-gradient(135deg, var(--surface), rgba(255,255,255,0.36));
+  border-radius: var(--card-radius);
+  padding:18px;
+  margin-bottom:16px;
+  box-shadow: 0 12px 30px var(--card-shadow);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(8px) saturate(115%);
+}
+
+/* top bar card */
+.card h2 { margin:0 0 6px 0; font-size:20px; display:flex; align-items:center; gap:12px; }
+.card p { margin:2px 0; color:var(--muted); font-size:14px; }
+
+/* logout link styled as a button */
+.card a[href="/logout"]{
+  display:inline-block;
+  margin-top:8px;
+  padding:8px 12px;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:600;
+  color:white;
+  background-image: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  box-shadow: 0 8px 18px rgba(0,120,215,0.12);
+}
+
+/* grid layout - responsive with column emphasis */
+.grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:14px;
+  align-items:start;
+}
+
+/* on wide screens make second column share and allow main column to be wider */
+@media (min-width:900px){
+  .grid{ grid-template-columns: 1.2fr 0.9fr; align-items:start; }
+}
+
+/* card headings */
+.card h4{ margin:0 0 10px 0; font-size:15px; color:#073047; display:flex; align-items:center; gap:8px; }
+
+/* chart container and canvas sizing - gives charts a consistent height */
+.card canvas {
+  width:100% !important;
+  height:200px !important;
+  display:block;
+  border-radius:10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.01));
+  box-shadow: inset 0 -1px 0 rgba(255,255,255,0.04);
+}
+
+/* current value styling */
+.current{
+  font-size:1.1rem;
+  font-weight:700;
+  margin-top:10px;
+  color:#042033;
+  display:inline-block;
+  background: rgba(255,255,255,0.6);
+  padding:8px 10px;
+  border-radius:10px;
+  border:1px solid rgba(8,20,30,0.05);
+}
+
+/* smaller muted current label if not subscribed */
+.current.not {
+  background: transparent;
+  color:var(--muted);
+  font-weight:600;
+}
+
+/* Raw stream area: monospace, scrollable, neat entries */
+#raw{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+  font-size:0.88rem;
+  max-height:48vh;
+  overflow:auto;
+  padding:10px;
+  background: rgba(2,8,16,0.02);
+  border-radius:10px;
+  border:1px solid rgba(8,20,30,0.04);
+}
+
+/* each pre entry style */
+#raw pre{
+  margin:0 0 10px 0;
+  padding:8px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:8px;
+  border:1px solid rgba(8,20,30,0.03);
+  overflow:auto;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+
+/* small helper row for layout inside the cards if needed */
+.card .row {
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+/* micro UI: tiny status badges for subscription */
+.badge{
+  display:inline-block;
+  padding:6px 8px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+  color:white;
+  background: linear-gradient(90deg, rgba(0,160,210,0.95), rgba(0,120,215,0.9));
+  box-shadow: 0 6px 16px rgba(0,120,215,0.12);
+}
+
+/* unsubscribed variant */
+.badge.off {
+  background: transparent;
+  color:var(--muted);
+  border:1px dashed rgba(6,30,40,0.06);
+  box-shadow:none;
+  font-weight:600;
+}
+
+/* tiny caption under charts */
+.card .caption {
+  margin-top:8px;
+  font-size:13px;
+  color:var(--muted);
+}
+
+/* responsive tweaks for mobile */
+@media (max-width:640px){
+  .card{ padding:14px; border-radius:12px; }
+  .card canvas{ height:160px !important; }
+  .current{ font-size:1rem; padding:7px 8px; }
+}
+
+/* subtle appearance animation when cards load */
+.card { transform: translateY(6px); opacity:0; animation: cardIn .45s cubic-bezier(.2,.9,.3,1) forwards; }
+@keyframes cardIn { to { transform: translateY(0); opacity:1; } }
+
+/* small utility: horizontal rule between dashboard sections */
+.hr {
+  height:1px;
+  background:linear-gradient(90deg, rgba(2,8,16,0.03), rgba(2,8,16,0.02));
+  margin:12px 0;
+}
+
+/* ensure tables/long JSON in raw don't overflow the layout */
+.card pre, .card code { white-space:pre-wrap; word-break:break-word; }
+
+/* focus outline improvements for accessibility */
+a:focus, button:focus { outline: 3px solid rgba(0,120,215,0.12); outline-offset:3px; border-radius:8px; }
+
 </style>
 
 </head><body>
 <div class="card">
-  <h2>WeatherPi Dashboard</h2>
+  <h2>🌤️ WeatherPi Dashboard</h2>
   <p>User: <b>{{user}}</b></p>
   <p>Broker: {{broker}} | Topic: {{topic}}</p>
   <a href="/logout">Logout</a>
