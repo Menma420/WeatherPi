@@ -77,7 +77,8 @@ WeatherPi/
 * 🔒 Token-based API access
 
 ---
-##Screenshots
+## Screenshots
+
 <img width="616" height="615" alt="image" src="https://github.com/user-attachments/assets/7ff232c3-b803-4af0-ab78-88af1e4d227c" />
 
 <img width="1238" height="512" alt="image" src="https://github.com/user-attachments/assets/c889a7d6-86dc-482f-ad88-462610ce9efd" />
