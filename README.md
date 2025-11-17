@@ -28,36 +28,13 @@ WeatherPi/
 | Component | Role | Runs on |
 |------------|-------|----------|
 | **Raspberry Pi Node** | Reads sensor data (e.g., DHT11) and publishes JSON over MQTT | Raspberry Pi |
-| **MQTT Broker** | Message hub for data exchange between Pi and server | WebHost / separate server |
+| **MQTT Broker** | Message hub for data exchange between Pi and server with multiple topic | WebHost / separate server |
 | **Flask WebHost** | Subscribes to sensor data, provides live dashboard, user login/signup | Host / Laptop |
 | **Remote SQL API** | Simple remote DB endpoint for user auth | Render / Cloud |
 
 ---
 
-## 🌐 MQTT Workflow
 
-```text
-[Raspberry Pi Sensor Node]
-    |
-    |  → Publishes JSON →  topic: sensors/<device>/dht11
-    |     Example payload:
-    |     {
-    |       "ts": 1763040407677,
-    |       "value": {"temperature": <encrypted temperature>, "humidity": <encrypted temperature>},
-    |       "status": 200,
-    |       "device": "raspberrypi"
-    |     }
-    |
-[MQTT Broker (Mosquitto)]
-    |
-    ↓
-[Flask WebHost (Subscriber)]
-    - Parses JSON
-    - Streams live via SSE (/stream)
-    - Displays charts in dashboard
-````
-
----
 
 ## 🧠 Tech Stack
 
@@ -100,6 +77,10 @@ WeatherPi/
 * 🔒 Token-based API access
 
 ---
+##Screenshots
+<img width="616" height="615" alt="image" src="https://github.com/user-attachments/assets/7ff232c3-b803-4af0-ab78-88af1e4d227c" />
+
+<img width="1238" height="512" alt="image" src="https://github.com/user-attachments/assets/c889a7d6-86dc-482f-ad88-462610ce9efd" />
 
 ## 🧑‍💻 Authors
 
