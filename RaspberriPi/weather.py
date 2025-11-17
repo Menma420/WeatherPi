@@ -63,7 +63,32 @@ def send_to_mqtt(data):
     }
     topic = f"sensors/{DEVICE_ID}/dht11"
     client.publish(topic, json.dumps(payload), qos=1, retain=False)
+'''
+def send_to_mqtt(data):
+    """Publish temperature and humidity to separate MQTT topics"""
+    
+    timestamp = int(time.time() * 1000)
 
+    # Temperature topic
+    temp_payload = {
+        "ts": timestamp,
+        "value": data["temperature"],
+        "status": 200,
+        "device": DEVICE_ID
+    }
+    temp_topic = f"sensors/{DEVICE_ID}/temperature"
+    client.publish(temp_topic, json.dumps(temp_payload), qos=1, retain=False)
+
+    # Humidity topic
+    hum_payload = {
+        "ts": timestamp,
+        "value": data["humidity"],
+        "status": 200,
+        "device": DEVICE_ID
+    }
+    hum_topic = f"sensors/{DEVICE_ID}/humidity"
+    client.publish(hum_topic, json.dumps(hum_payload), qos=1, retain=False)
+'''
 # -------------------------
 # Main loop
 # -------------------------
